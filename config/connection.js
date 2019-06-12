@@ -1,0 +1,17 @@
+//To get the needed dependencies//
+var mysql = require("mysql");
+
+// MySQL DB Connection Information//
+var connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "kenmore71",
+    database: "burgers_db"
+  });
+
+//To make the connection to MySQL//
+connection.connect
+
+//To export the connection for ORM purposes//
+module.exports = connection;
