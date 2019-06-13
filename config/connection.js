@@ -11,7 +11,14 @@ var connection = mysql.createConnection({
   });
 
 //To make the connection to MySQL//
-connection.connect
+connection.connect(function(err){
+    if(err) {
+        console.log("Error connecting at: " + err.stack);
+        return;
+    } else{
+        console.log("Connected as id " + connection.threadId);
+    }
+});
 
 //To export the connection for ORM purposes//
 module.exports = connection;
