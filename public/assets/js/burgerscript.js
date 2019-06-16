@@ -1,47 +1,22 @@
-$(function(){
-    $(".create-form").on("submit", function(event){
-        event.preventDefault();
+$("#add-burger").on("click", function(event) {
+    event.preventDefault();
 
-        var newBurg = {
-            burger_name: $("#newburger")
-            .val()
-            .trim(),
-            devoured: 0
-        };
+    var newBurger = {
+        burger: $("#burger-name").val().trim()
+    }
 
-        $.ajax("/api/burgers", {
-            type: "POST",
-            data: newBurg
-        }).then(function(){
-            console.log("New burger added. Coming in hot!");
-            location.reload();
-        });
+    $.post("/api/burgers", newBurger, function(data) {
+        location.reload();
+    })
+})
+
+$(".devour").on("click", function() {
+    var id = $(this).data("id");
+
+    $.ajax("/api/burgers/" + id, {
+        type: "PUT",
+    }).then(function() {
+        console.log("id: " + id + " devoured.");
+        location.reload();
     });
-
-    $(".eatburger").on("click", function(event){
-        event.preventDefault();
-
-        var id = $(this).data("id");
-        var devouredPhase = {
-            devoured: 1
-        };
-
-        $.ajax("/api/burgers/" + id, {
-            type: "PUT",
-            data: devouredPhase
-        }).then(function(){
-            console.log("Burger was devoured. Mmmm mmm.");
-            location.reload();
-        });
-    });
-    $(".deleteburger").on("click", function(event){
-        event.preventDefault();
-
-        var id = $(this).data("id");
-
-        $.ajax({
-           type: "DELETE",
-           url: "/api/burgers/" + id 
-        }).then(location.reload());  
-    });   
-});
+})

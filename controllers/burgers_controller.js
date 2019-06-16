@@ -1,58 +1,41 @@
 var express = require("express");
 var burger = require("../models/burger.js");
 
-var routerX = express.Router();
+var router = express.Router();
 
-routerX.get("/", function(req, res){
-    burger.selectAll(function(data){
-        var hbObject = {
+router.get("/", function(req, res) {
+    burger.all(function(data) {
+        var allTheBurgers = {
             burgers: data
         };
-        console.log(hbObject);
-        res.render("index", hbObject);
+        console.log(allTheBurgers);
+        res.render("index", allTheBurgers);
+    })
+})
+
+router.get("/api/burgers", function(req, res) {
+    burger.selectAll(function (data) {
+        res.json(data);
+    })
+})
+
+router.post("/api/burgers", function(req, res) {
+    var freshBurger = req.body.burger;
+    console.log(freshBurger);
+    burger.create(freshBurger, function(response) {
+        console.log("Your new burger has been added!");
+        res.status(200).end();
     });
+})
 
-
-routerX.post("/api/burgers", function(req, res){
-    burger.insertOne(
-       ["burger_name", "devoured"],
-       [req.body.burger_name, req.body.devoured],
-       function(result){
-           res.json({id: result.insertId});
-       } 
-    );
-});
-
-routerX.put("/api/burgers/:id", function(req, res){
-    var condition = "id = " + req.params.id;
-    console.log("condition", condition);
-
-    burger.updateOne({devoured: req.body.devoured}, condition, function(
-        result
-    ) {
-        if(result.changedRows === 0) {
-            return res.status(404).end();
-        } else {
-            res.status(200).end();
-        }
+router.put("/api/burgers/:id", function(req, res) {
+    var id = req.params.id;
+    burger.update("devoured", true, "id = " + id, function(response) {
+        console.log("You devoured that burger, son.");
+        res.status(200).end();
     });
-});
+})
 
-routerX.delete("/api/burgers/:id", function(req, res){
-    var condition = "id = " + req.params.id;
-    console.log("condition", condition);
-
-    burger.deleteOne(condition, function(result){
-        if(result.changedRows === 0) {
-            return res.status(404).end();
-        } else {
-            res.status(200).end();
-        }  
-    });
-});
-
-});
-
-module.exports = routerX;
+module.exports = router;
 
 
