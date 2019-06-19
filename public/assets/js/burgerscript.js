@@ -10,7 +10,9 @@ $("#add-burger").on("click", function(event) {
     })
 })
 
-$(".devour").on("click", function() {
+$(document).on("click", ".devour", function(event) {
+    event.preventDefault();
+    console.log("Let's work");
     var id = $(this).data("id");
 
     $.ajax("/api/burgers/" + id, {
